@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Justin Rich's Typeface Coding Excecise
 
-## Getting Started
+This is Justin Rich's submission for [Typeface's engineering takehome](./public/Design%20a%20Chat%20application-Candidate-Guide.pdf).
 
-First, run the development server:
+### Technical Decisions
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+To make this app I made the following decisions:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- React: used because it was required in the instructions, and I like it
+- NextJS: initially I had contemplated using the API routing feature to create a thin API to send user/chat data. However due to time I was not able to do this. I persisted in NextJS because it will allow us to easily add a backend service to handle advanced features. Because we are using useReducer we must declair "use client" at top of the page which essentually makes the page a CSR page. However the Next framework is still a smart choice because it allows us to extend the app and prefetch important information like user data in the future.
+- Tailwind: this CSS framework allows for easy prototyping because basic css styles can be added inline via pre-defined className values.
+- useReducer: Local state management is managed via a useReducer rather than series of useState. useReducer allows stateful data that changes in parallel to be mutated.
+- No Central State: because the requirements for this POC where simple I decided to keep all stateful data in a native React hook (useReducer). However, if we where to add features and require data that needs to be used beyond this page (like user data) it may be useful to manage such data in a central state system (Redux, Apollo, etc).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Getting Started
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+1. install dependencies: `yarn install`
+2. build application: `yarn build`
+3. start application: `yarn start`
+4. navigate to `http://localhost:3000` on your browser
 
-## Learn More
+### Using the application
 
-To learn more about Next.js, take a look at the following resources:
+On start you should see something like this:
+<img style="width: 100%;" src="./public/screenshot1.png"/>
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+You should see a default message that is set to a "non-user" message. For this POC all messages will be from you the user. The default message is just to display the experience of recieving messages from users other than yourself.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+#### Sending a message
 
-## Deploy on Vercel
+Test state management and UX by sending a few messages, they all should appear on the right hand side of the screen.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+<img style="width: 100%;" src="./public/screenshot2.png"/>
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+#### Deleting a message
+
+To delete a message you can click the red ❌ to the right of your message and the message will be removed from the conversation.
+
+### Next Steps
+
+There are several features missing, here's a few improvements I would recommend
+
+- **create a backend**: this would allow us to persist data between sessions and receive messages from users outside the web client.
+- **user management**: right now the user IDs and information are hardcoded, this won't work for a production application. We would need to implement user management within a backend service. This app would then need to change to fetch and manage state based on user information
+- **multimedia sharing**: people want to share videos, pictures, links. We would need to be able to handle the uploading and rendering of multimedia data. This would involve a storage bucket on the backend and validation of file types to ensure system reliability.
+- **groups/channels**: the way the local state is managed allows for multiple users to be added to the chat. Part of adding "user management" would be to allow us to invite other "external" members to the chat. This would also require a user search by some primary identifier like email or ID. Once added the external member's messages would appear on the left.
+- **realtime data transmission**: to show new messages we could poll the server for new messages. Alternatively we could also push changes to the clients via the implementation of webhooks.
